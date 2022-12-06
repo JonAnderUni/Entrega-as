@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Ejercicio imagen de Toriyama</title>
+    <script>
+      //Anchura imagen = 476, altura = 480
+      window.onload = function(){
+        var posX = 0;
+        var posY = 0;
+        var canvas = document.getElementById("lienzo");
+        var context = canvas.getContext("2d");
+        var imagen = new Image();
+
+        imagen.src = "/img/spritesheet.png";
+
+        imagen.onload = cargar;
+        function cargar() {
+          cambiarCuadrado();
+          pulsarTeclas();
+        };
+        function pintarPosicion(){
+          context.font = "bold 8px Arial Black";
+          context.textBaseline = "top";
+          context.fillStyle = "red";
+          context.fillText("("+posX+","+posY+")", 430, 8);
+        }
+        function recortarImagen(){
+          context.drawImage(imagen, posX, posY, 28, 38, 476, 0, 56, 76);
+        }
+        function cambiarCuadrado(){
+          var posXEnd = posX+28;
+          var posYEnd = posY+38;
+          context.drawImage(imagen, 0, 0);
+          context.beginPath();
+          context.moveTo(posX,posY);
+          context.lineTo(posXEnd,posY);
+          context.lineTo(posXEnd,posYEnd);
+          context.lineTo(posX,posYEnd);
+          context.closePath();
+          context.strokeStyle = "#ff0000";
+          context.stroke();
+
+          recortarImagen();
+          pintarPosicion();
+        }
+
+        function pulsarTeclas(){
+          document.addEventListener('keydown', (event) => {
+            const keyName = event.key;
+            if (event.ctrlKey) {
+              return;
+            } else {
+              if(keyName === "ArrowUp"){
+                posY--;
+                event.preventDefault();
+                if(posY < 0){
+                  posY = 0;
+                  alert("No se puede ir fuera de la imagen");
+                  return;
+                }else{
+                  cambiarCuadrado(context);
+                }
+              }else if(keyName === "ArrowDown"){
+                posY++;
+                event.preventDefault();
+                if(posY > 480){
+                  posY = 480;
+                  alert("No se puede ir fuera de la imagen");
+                  return;
+                }else{
+                  cambiarCuadrado(context);
+                }
+              }else if(keyName === "ArrowLeft"){
+                posX--;
+                event.preventDefault();
+                if(posX < 0){
+                  posY = 0;
+                  alert("No se puede ir fuera de la imagen");
+                  return;
+                }else{
+                  cambiarCuadrado(context);
+                }
+              }else if(keyName === "ArrowRight"){
+                posX++;
+                event.preventDefault();
+                if(posX > 448){
+                  posX = 448;
+                  alert("No se puede ir fuera de la imagen");
+                  return;
+                }else{
+                  cambiarCuadrado(context);
+                }
+              }
+            }
+          }, false);
+        }
+      }
+  </script>
+
+  </head>
+  <body>
+    <header>
+      <h2>Usando Nginx como servidor web</h2>
+    </header>
+
+    <canvas id="lienzo" width="800" height="600"></canvas>
+
+  </body>
+</html>
